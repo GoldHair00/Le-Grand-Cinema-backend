@@ -1,2 +1,3 @@
-#Le Grand Cinema - "Back-End"
-API de Réservation de places de cinéma
+# Le Grand Cinéma - Backend
+
+API de réservation de places de cinéma.
