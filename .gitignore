@@ -7,4 +7,5 @@ htmlcov/
 instance/
 *.db
 .pytest_cache/
+coverage.xml
 
