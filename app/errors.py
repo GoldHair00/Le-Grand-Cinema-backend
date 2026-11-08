@@ -12,6 +12,11 @@ class EmailAlreadyUsedError(AppError):
     code = "email_already_used"
 
 
+class InvalidCredentialsError(AppError):
+    status_code = 401
+    code = "invalid_credentials"
+
+
 def register_error_handlers(app):
     @app.errorhandler(AppError)
     def handle_app_error(error):
