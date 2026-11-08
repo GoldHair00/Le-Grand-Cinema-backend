@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from app.config import Config
 from app.errors import register_error_handlers
@@ -10,6 +11,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
+    CORS(app, origins=app.config["CORS_ORIGINS"])
     jwt.init_app(app)
     swagger.init_app(app)
     register_error_handlers(app)
