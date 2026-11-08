@@ -2,8 +2,9 @@ import os
 
 def _database_url():
     url = os.environ.get("DATABASE_URL", "sqlite:///cinema.db")
-    if url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql://", 1)
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return url.replace(prefix, "postgresql+psycopg2://", 1)
     return url
 
 class Config:
