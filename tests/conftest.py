@@ -4,7 +4,6 @@ from app import create_app
 from app.config import TestConfig
 from app.extensions import db
 
-
 @pytest.fixture
 def app():
     app = create_app(TestConfig)
@@ -13,7 +12,7 @@ def app():
         yield app
         db.session.remove()
         db.drop_all()
-
+        db.engine.dispose()
 
 @pytest.fixture
 def client(app):
