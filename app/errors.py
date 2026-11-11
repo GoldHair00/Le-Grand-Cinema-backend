@@ -16,6 +16,13 @@ class InvalidCredentialsError(AppError):
     status_code = 401
     code = "invalid_credentials"
 
+class ReservationConflictError(AppError):
+    status_code = 409
+    code = "reservation_conflict"
+
+class InvalidSeatError(AppError):
+    status_code = 400
+    code = "invalid_seat"
 
 def register_error_handlers(app):
     @app.errorhandler(AppError)
