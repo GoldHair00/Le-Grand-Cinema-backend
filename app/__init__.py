@@ -22,11 +22,13 @@ def create_app(config_class=Config):
     from app.routes.health import health_bp
     from app.routes.screenings import screenings_bp
     from app.routes.reservations import reservations_bp
+    from app.routes.films import films_bp
 
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(screenings_bp)
     app.register_blueprint(reservations_bp)
+    app.register_blueprint(films_bp)
 
     with app.app_context():
         db.create_all()
