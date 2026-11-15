@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 
 from app.schemas.screening import ScreeningQuerySchema
 from app.services import screening_service
+from app.extensions import db
+from app.models import Seat, Reservation, Screening
 
 screenings_bp = Blueprint("screenings", __name__, url_prefix="/api/screenings")
 
@@ -43,3 +45,50 @@ def list_screenings():
         for screening, film in rows
     ]
     return jsonify(result), 200
+
+
+@screenings_bp.route("/<int:screening_id>/seats", methods=["GET"])
+def list_screening_seats(screening_id):
+    """
+    Liste les sièges d'une séance et leur disponibilité.
+    ---
+    tags:
+      - Séances
+    parameters:
+      - in: path
+        name: screening_id
+        required: true
+        type: integer
+    responses:
+      200:
+        description: Liste des sièges et de leur disponibilité
+      404:
+        description: Séance introuvable
+    """
+    screening = db.session.get(Screening, screening_id)
+
+    if screening is None:
+        return jsonify({"message": "Séance introuvable"}), 404
+
+    seats = Seat.query.filter_by(
+        room_id=screening.room_id
+    ).order_by(
+        Seat.row_label, Seat.number
+    ).all()
+
+    reserved_seat_ids = {
+        reservation.seat_id
+        for reservation in Reservation.query.filter_by(
+            screening_id=screening_id
+        ).all()
+    }
+
+    return jsonify([
+        {
+            "id": seat.id,
+            "row": seat.row_label,
+            "number": seat.number,
+            "available": seat.id not in reserved_seat_ids
+        }
+        for seat in seats
+    ]), 200
